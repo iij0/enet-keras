@@ -1,6 +1,5 @@
 # coding=utf-8
-from __future__ import absolute_import
-from __future__ import print_function
+from __future__ import absolute_import, print_function
 
 from PIL import Image as PILImage
 import numpy as np
@@ -9,11 +8,9 @@ import sys
 
 from keras import backend as K
 from keras.preprocessing.image import load_img, img_to_array, array_to_img
-from models import build
 
-from data import datasets
-from data import utils
-# from data.utils import normalized, basename_without_ext  # , pillow_invert_channels
+from .data import datasets, utils
+from .models import build
 
 
 def color_output_image(dataset, img, mode='bw'):

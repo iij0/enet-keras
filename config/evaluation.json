@@ -6,5 +6,5 @@
     "nc": 81,
     "h5file": "enet_best_whole_image",
     "model_name": "enet",
-    "test_sample_size": 500000
+    "test_sample_size": null
 }
