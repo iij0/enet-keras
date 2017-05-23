@@ -1,10 +1,11 @@
 # coding=utf-8
 from keras.layers.advanced_activations import PReLU
-from keras.layers.convolutional import Conv2D, ZeroPadding2D
-from keras.layers.core import Permute, SpatialDropout2D
+from keras.layers.convolutional import Conv2D
+from keras.layers.core import SpatialDropout2D
 from keras.layers.merge import add, concatenate
 from keras.layers.normalization import BatchNormalization
 from keras.layers.pooling import MaxPooling2D
+from keras import backend as K
 
 
 def initial_block(inp, nb_filter=13, nb_row=3, nb_col=3, strides=(2, 2)):
@@ -52,12 +53,10 @@ def bottleneck(inp, output, internal_scale=4, asymmetric=0, dilated=0, downsampl
     # other branch
     if downsample:
         other = MaxPooling2D()(other)
-        other = Permute((1, 3, 2))(other)
+
         pad_feature_maps = output - inp.get_shape().as_list()[3]
-        tb_pad = (0, 0)
-        lr_pad = (0, pad_feature_maps)
-        other = ZeroPadding2D(padding=(tb_pad, lr_pad))(other)
-        other = Permute((1, 3, 2))(other)
+        shape = inp.get_shape().as_list()[:-1] + [pad_feature_maps]
+        other = concatenate([other, K.zeros(shape=shape)], -1)
 
     encoder = add([encoder, other])
     encoder = PReLU(shared_axes=[1, 2])(encoder)
